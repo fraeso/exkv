@@ -1,4 +1,13 @@
 defmodule KVTest do
-  use ExUnit.Case
-  doctest KV
+  use ExUnit.Case, async: true
+
+  test "creates and looks up buckets by a key/name" do
+    name = "some unique bucket name"
+    assert is_nil(KV.lookup_bucket(name))
+
+    assert {:ok, bucket} = KV.create_bucket(name)
+    assert KV.lookup_bucket(name) == bucket
+
+    assert KV.create_bucket(name) == {:error, {:already_started, bucket}}
+  end
 end
