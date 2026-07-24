@@ -86,15 +86,8 @@ Commands are `\r\n`-terminated. Every command answers `OK`, `NOT FOUND`, or `UNK
 | `DELETE <bucket> <key>` | `OK` |
 | `SUBSCRIBE <bucket>` | streams `<key> SET TO <value>` / `<key> DELETED` until closed |
 
-## Configuration
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `PORT` | `4050` (`4040` in test) | TCP listener |
-| `NODES` | none | Comma-separated peers to connect on boot |
-
 ## Limitations
 
->[!WARNING] 
+>[!CAUTION] 
 > This project is an educational project I built for fun.
 > I doubt this warning is even needed, but don't use it, just go use Redis lol
