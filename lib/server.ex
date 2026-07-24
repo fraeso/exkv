@@ -11,13 +11,14 @@ defmodule KV.Server do
 
   defp loop_acceptor(socket) do
     {:ok, client} = :gen_tcp.accept(socket)
-    serve(client)
+    {:ok, pid} = Task.Supervisor.start_child(KV.ServerSupervisor, fn -> serve(client) end)
+    :ok = :gen_tcp.controlling_process(client, pid)
     loop_acceptor(socket)
   end
 
   defp serve(socket) do
-    socket 
-    |> read_line() 
+    socket
+    |> read_line()
     |> write_line(socket)
 
     serve(socket)
