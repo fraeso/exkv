@@ -36,8 +36,7 @@ export NODES=a@127.0.0.1,b@127.0.0.1,c@127.0.0.1
 PORT=4052 iex --name c@127.0.0.1 -S mix
 ```
 
-Each node gets the same list, itself included - connecting to yourself is a harmless
-no-op. `Node.list()` shows the peers.
+Each node gets the same list, itself included - a node connecting to itself is harmless. `Node.list()` shows the peers.
 
 ## Using it
 
