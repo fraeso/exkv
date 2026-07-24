@@ -19,8 +19,8 @@ defmodule KV.Server do
   defp serve(socket) do
     msg =
       with {:ok, data} <- read_line(socket),
-        {:ok, operation} <- KV.Command.parse(data),
-          do: KV.Command.run(operation, socket)
+           {:ok, operation} <- KV.Command.parse(data),
+           do: KV.Command.run(operation, socket)
 
     write_line(socket, msg)
     serve(socket)
@@ -36,6 +36,10 @@ defmodule KV.Server do
 
   defp write_line(socket, {:error, :unknown_command}) do
     :gen_tcp.send(socket, "UNKNOWN COMMAND\r\n")
+  end
+
+  defp write_line(socket, {:error, :not_found}) do
+    :gen_tcp.send(socket, "NOT FOUD\r\n")
   end
 
   defp write_line(socket, {:error, error}) do

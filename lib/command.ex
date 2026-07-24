@@ -2,9 +2,44 @@ defmodule KV.Command do
   @doc """
   Runs the given command
   """
-  def run(command, socket) do
+  def run(namespace, socket)
+
+  def run({:create, namespace}, socket) do
+    KV.create_bucket(namespace)
     :gen_tcp.send(socket, "OK\r\n")
     :ok
+  end
+
+  def run({:get, namespace, key}, socket) do
+    lookup(namespace, fn pid ->
+      value = KV.Bucket.get(pid, key)
+      :gen_tcp.send(socket, "#{value}\r\nOK\r\n")
+      :ok
+    end)
+  end
+
+  def run({:put, namespace, key, value}, socket) do
+    lookup(namespace, fn pid ->
+      KV.Bucket.put(pid, key, value)
+      :gen_tcp.send(socket, "OK\r\n")
+      :ok
+    end)
+  end
+
+  def run({:delete, namespace, key}, socket) do
+    lookup(namespace, fn pid ->
+      KV.Bucket.delete(pid, key)
+      :gen_tcp.send(socket, "OK\r\n")
+      :ok
+    end)
+  end
+
+  defp lookup(namespace, callback) do
+    if bucket = KV.lookup_bucket(namespace) do
+      callback.(bucket)
+    else
+      {:error, :not_found}
+    end
   end
 
   @doc ~S"""
