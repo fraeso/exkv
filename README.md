@@ -4,7 +4,7 @@ A distributed in-memory K/V store that communicates over plain TCP.
 
 Keys live in named **buckets**, each run by it's own supervisor process. Buckets are
 registered globally across the cluster using Erlang Global Name Registration Facility, so a bucket created on one node is readable and
-writable from every other node. There is also support for subscriptions to bucket, puts and deletes to a bucket get sent in real time to the subscriber
+writable from every other node. There is also support for subscriptions to bucket, subscribers to a bucket get notifications on the PUTs and DELETEs in real time.
 
 
 Built following the [Elixir "Mix and OTP" guide](https://hexdocs.pm/elixir/introduction-to-mix.html).
