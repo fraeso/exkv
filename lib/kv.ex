@@ -3,6 +3,10 @@ defmodule KV do
 
   @impl true
   def start(_start_type, _start_args) do
+    for node <- Application.fetch_env!(:kv, :nodes) do
+      Node.connect(node)
+    end
+
     port = Application.fetch_env!(:kv, :port)
 
     children = [
