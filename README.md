@@ -1,6 +1,6 @@
 # exkv
 
-A distributed in-memory key/value store that communicates over plain TCP. 
+A distributed in-memory K/V store that communicates over plain TCP. 
 
 Keys live in named **buckets**, each run by it's own supervisor process. Buckets are
 registered globally across the cluster using Erlang Global Name Registration Facility, so a bucket created on one node is readable and
