@@ -32,4 +32,14 @@ defmodule KV.BucketTest do
     assert KV.Bucket.get(config.test, "186.18.94.253") == nil
     assert KV.Bucket.get(config.test, "183.100.12.109") == 14
   end
+
+  test "subscribes to puts and deletes" do
+    {:ok, bucket} = start_supervised(KV.Bucket)
+    KV.Bucket.subscribe(bucket)
+    KV.Bucket.put(bucket, "user123", "new notification!")
+    assert_receive {:put, "user123", "new notification!"}
+
+    spawn(fn -> KV.Bucket.delete(bucket, "user123") end)
+    assert_receive {:delete, "user123"}
+  end
 end
