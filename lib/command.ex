@@ -1,4 +1,12 @@
 defmodule KV.Command do
+  @doc """
+  Runs the given command
+  """
+  def run(command, socket) do
+    :gen_tcp.send(socket, "OK\r\n")
+    :ok
+  end
+
   @doc ~S"""
   Parses the given `line` into a command
 

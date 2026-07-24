@@ -17,19 +17,36 @@ defmodule KV.Server do
   end
 
   defp serve(socket) do
-    socket
-    |> read_line()
-    |> write_line(socket)
+    msg =
+      case read_line(socket) do
+        {:ok, data} ->
+          case KV.Command.parse(data) do
+            {:ok, operation} -> KV.Command.run(operation, socket)
+            {:error, _} = err -> err
+          end
 
+        {:error, _} = err ->
+          err
+      end
+
+    write_line(socket, msg)
     serve(socket)
   end
 
   defp read_line(socket) do
-    {:ok, data} = :gen_tcp.recv(socket, 0)
-    data
+    :gen_tcp.recv(socket, 0)
   end
 
-  defp write_line(line, socket) do
-    :gen_tcp.send(socket, line)
+  defp write_line(_socket, :ok) do
+    :ok
+  end
+
+  defp write_line(socket, {:error, :unknown_command}) do
+    :gen_tcp.send(socket, "UNKNOWN COMMAND\r\n")
+  end
+
+  defp write_line(socket, {:error, error}) do
+    :gen_tcp.send(socket, "ERROR\r\n")
+    exit(error)
   end
 end
