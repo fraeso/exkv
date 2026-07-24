@@ -21,4 +21,15 @@ defmodule KV.BucketTest do
     KV.Bucket.put(config.test, test_uuid, false)
     assert KV.Bucket.get(config.test, test_uuid) == false
   end
+
+  test "deletes key and it's associated value from named process", config do
+    {:ok, _} = KV.Bucket.start_link(name: config.test)
+
+    KV.Bucket.put(config.test, "186.18.94.253", 10)
+    KV.Bucket.put(config.test, "183.100.12.109", 14)
+    KV.Bucket.delete(config.test, "186.18.94.253")
+
+    assert KV.Bucket.get(config.test, "186.18.94.253") == nil
+    assert KV.Bucket.get(config.test, "183.100.12.109") == 14
+  end
 end
