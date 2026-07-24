@@ -6,7 +6,6 @@ defmodule KV do
     port = Application.fetch_env!(:kv, :port)
 
     children = [
-      {Registry, keys: :unique, name: KV.Registry},
       {DynamicSupervisor, name: KV.BucketSupervisor, strategy: :one_for_one},
       {Task.Supervisor, name: KV.ServerSupervisor},
       Supervisor.child_spec({Task, fn -> KV.Server.accept(port) end}, restart: :permanent)
@@ -23,5 +22,5 @@ defmodule KV do
     GenServer.whereis(via(name))
   end
 
-  defp via(name), do: {:via, Registry, {KV.Registry, name}}
+  defp via(name), do: {:global, name}
 end
