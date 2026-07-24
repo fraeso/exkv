@@ -2,7 +2,7 @@ defmodule KV.BucketTest do
   use ExUnit.Case, async: true
 
   test "stores values by key" do
-    {:ok, bucket} = KV.Bucket.start_link([])
+    {:ok, bucket} = start_supervised(KV.Bucket)
     assert KV.Bucket.get(bucket, "milk") == nil
 
     KV.Bucket.put(bucket, "milk", 3)
@@ -12,7 +12,7 @@ defmodule KV.BucketTest do
   test "stores values by key on a named process", config do
     test_uuid = "1386279e-d508-4de0-a25c-e8aedbe83d2b"
 
-    {:ok, _} = KV.Bucket.start_link(name: config.test)
+    {:ok, _} = start_supervised({KV.Bucket, name: config.test})
     assert KV.Bucket.get(config.test, test_uuid) == nil
 
     KV.Bucket.put(config.test, test_uuid, true)
@@ -23,7 +23,7 @@ defmodule KV.BucketTest do
   end
 
   test "deletes key and it's associated value from named process", config do
-    {:ok, _} = KV.Bucket.start_link(name: config.test)
+    {:ok, _} = start_supervised({KV.Bucket, name: config.test})
 
     KV.Bucket.put(config.test, "186.18.94.253", 10)
     KV.Bucket.put(config.test, "183.100.12.109", 14)
