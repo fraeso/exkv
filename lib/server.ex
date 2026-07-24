@@ -39,7 +39,7 @@ defmodule KV.Server do
   end
 
   defp write_line(socket, {:error, :not_found}) do
-    :gen_tcp.send(socket, "NOT FOUD\r\n")
+    :gen_tcp.send(socket, "NOT FOUND\r\n")
   end
 
   defp write_line(socket, {:error, error}) do
