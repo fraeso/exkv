@@ -3,11 +3,13 @@ defmodule KV do
 
   @impl true
   def start(_start_type, _start_args) do
+    port = Application.fetch_env!(:kv, :port)
+
     children = [
       {Registry, keys: :unique, name: KV.Registry},
       {DynamicSupervisor, name: KV.BucketSupervisor, strategy: :one_for_one},
       {Task.Supervisor, name: KV.ServerSupervisor},
-      Supervisor.child_spec({Task, fn -> KV.Server.accept(4040) end}, restart: :permanent)
+      Supervisor.child_spec({Task, fn -> KV.Server.accept(port) end}, restart: :permanent)
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: KV.RootSupervisor)
