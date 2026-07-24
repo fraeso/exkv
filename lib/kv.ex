@@ -1,18 +1,12 @@
 defmodule KV do
-  @moduledoc """
-  Documentation for `KV`.
-  """
+  use Application
 
-  @doc """
-  Hello world.
+  @impl true
+  def start(_start_type, _start_args) do
+    children = [
+      {Registry, keys: :unique, name: KV.Registry}
+    ]
 
-  ## Examples
-
-      iex> KV.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    Supervisor.start_link(children, strategy: :one_for_one, name: KV.Supervisor)
   end
 end
