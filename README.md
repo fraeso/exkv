@@ -20,21 +20,24 @@ mix deps.get
 iex -S mix          
 ```
 
-A three-node cluster - one command per terminal:
+A three-node cluster - one block per terminal:
 
 ```sh
 # terminal 1
+export NODES=a@127.0.0.1,b@127.0.0.1,c@127.0.0.1
 PORT=4050 iex --name a@127.0.0.1 -S mix
 
 # terminal 2
-PORT=4051 NODES=a@127.0.0.1 iex --name b@127.0.0.1 -S mix
+export NODES=a@127.0.0.1,b@127.0.0.1,c@127.0.0.1
+PORT=4051 iex --name b@127.0.0.1 -S mix
 
-#terminal 3
-PORT=4052 NODES=a@127.0.0.1,b@127.0.0.1 iex --name c@127.0.0.1 -S mix
+# terminal 3
+export NODES=a@127.0.0.1,b@127.0.0.1,c@127.0.0.1
+PORT=4052 iex --name c@127.0.0.1 -S mix
 ```
 
-`Node.list()` in any session shows the peers. Nodes on separate machines also need a
-matching `--cookie`, but locally they share `~/.erlang.cookie` automatically.
+Each node gets the same list, itself included - connecting to yourself is a harmless
+no-op. `Node.list()` shows the peers.
 
 ## Using it
 
