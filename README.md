@@ -1,11 +1,11 @@
 # exkv
 
-A distributed in-memory K/V store that communicates over plain TCP. 
+A distributed in-memory key/value store that communicates over plain TCP.
 
-Keys live in named **buckets**, each run by it's own supervisor process. Buckets are
-registered globally across the cluster using Erlang Global Name Registration Facility, so a bucket created on one node is readable and
-writable from every other node. There is also support for subscriptions to bucket, subscribers to a bucket get notifications on the PUTs and DELETEs in real time.
-
+- Keys live in named **buckets**, created on demand at runtime.
+- Buckets are shared across the cluster - create one on any node, read and write it from every other node.
+- Subscribe to a bucket and every put and delete provides notifications in real time.
+- Buckets restart automatically if they crash.
 
 Built following the [Elixir "Mix and OTP" guide](https://hexdocs.pm/elixir/introduction-to-mix.html).
 
@@ -86,8 +86,15 @@ Commands are `\r\n`-terminated. Every command answers `OK`, `NOT FOUND`, or `UNK
 | `DELETE <bucket> <key>` | `OK` |
 | `SUBSCRIBE <bucket>` | streams `<key> SET TO <value>` / `<key> DELETED` until closed |
 
+## Configuration
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `PORT` | `4050` (`4040` in test) | TCP listener |
+| `NODES` | none | Comma-separated peers to connect on boot |
+
 ## Limitations
 
->[!CAUTION] 
+>[!WARNING]
 > This project is an educational project I built for fun.
 > I doubt this warning is even needed, but don't use it, just go use Redis lol
