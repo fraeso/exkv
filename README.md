@@ -9,6 +9,10 @@ A distributed in-memory key/value store that communicates over plain TCP.
 
 Built following the [Elixir "Mix and OTP" guide](https://hexdocs.pm/elixir/introduction-to-mix.html).
 
+## Demo
+
+https://github.com/user-attachments/assets/81d06579-b97d-4d47-9a4e-d22bb2d11151 
+
 ## Running
 
 Single node:
